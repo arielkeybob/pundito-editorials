@@ -1,0 +1,41 @@
+<?php
+/**
+ * Admin customizations for Pundito Theme
+ */
+
+// Esquema de cores personalizado no admin
+function pundito_admin_color_scheme() {
+    $theme_dir = get_stylesheet_directory_uri();
+    wp_admin_css_color('pundito', __('Pundito'),
+        $theme_dir . '/tddacademy.css',
+        array('#031799', '#f2fcff', '#f59e0b', '#1b38f4')
+    );
+}
+add_action('admin_init', 'pundito_admin_color_scheme');
+
+// Força o esquema de cores personalizado para todos os usuários
+function pundito_force_admin_color_scheme($color_scheme) {
+    return 'pundito';
+}
+add_filter('get_user_option_admin_color', 'pundito_force_admin_color_scheme');
+
+// Custom CSS para ocultar elementos no tipo de post 'editorial'
+function pundito_custom_css_for_editorial() {
+    if (get_post_type() == 'editorial' && wp_get_post_parent_id(get_the_ID()) == 0) {
+        echo '
+        <style type="text/css">
+            .wpra-reactions-wrap.wpra-plugin-container.wpra-rendered {
+                display: none;
+            }
+        </style>';
+    }
+}
+add_action('wp_head', 'pundito_custom_css_for_editorial');
+
+
+function enqueue_custom_admin_script() {
+    wp_enqueue_script('my-custom-admin-script', plugin_dir_url(__DIR__) . 'js/admin-js.js', array('jquery'), '1.0', true);
+}
+add_action('admin_enqueue_scripts', 'enqueue_custom_admin_script');
+
+

@@ -1,0 +1,163 @@
+/* style.css */
+
+/* Tabela */
+tbody#the-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+tr {
+    background-color: #ffd6d6;
+    display: block;
+    width: 23%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 10px;
+    border-radius: 5px;
+    border: solid #ffd6d6;
+}
+
+tbody tr.level-0 {
+    border: solid #1b38f4;
+}
+
+tbody tr.level-1 {
+    border: solid #ffd6d6;
+}
+
+thead tr,
+tfoot tr {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: #f4f4f4;
+}
+
+tr.level-0 {
+    background-color: #1b38f4;
+    border: #1b38f4;
+}
+
+tr.level-0 a,
+.level-0 button.button-link.editinline {
+    color: #ffd6d6;
+}
+
+tr.level-0 a:hover {
+    color: #ffffff;
+}
+
+tbody tr {
+    min-height: 250px;
+    display: inline-grid;
+}
+
+.widefat tbody th.check-column {
+    width: 100%;
+	height:0;
+}
+
+td.title.column-title.has-row-actions.column-primary.page-title {
+    width: 100%;
+}
+
+.fixed .column-date {
+    width: 100%;
+}
+
+td.featured_image.column-featured_image {
+    width: 100%;
+}
+
+td.taxonomy-child_of.column-taxonomy-child_of {
+    font-size: 16px;
+}
+
+td.taxonomy-child_of.column-taxonomy-child_of:before {
+    content: "\f14a";
+    font-family: "dashicons";
+    display: inline-block;
+    margin-right: 5px;
+    color: #fff;
+    rotate: 180deg;
+}
+
+.level-0 .title a.row-title {
+    text-transform: uppercase;
+    font-size: 20px !important;
+    line-height: 2em;
+    font-weight: 800;
+}
+
+/* Botão "Add Chapter" */
+span.add_chapter {
+    width: 100%;
+    display: inline-grid;
+    margin-top: 25px;
+    font-size: 16px;
+	color: transparent;
+    line-height: 0;
+}
+
+span.add_chapter a:before {
+    content: "\f132";
+    font-family: "dashicons";
+    display: inline-block;
+    margin-right: 5px;
+    color: #fff;
+}
+
+.level-1 td.taxonomy-child_of.column-taxonomy-child_of {
+    display: none;
+}
+
+/* Divisor quando tem episódios */
+tr.table-divider {
+    background: transparent;
+    width: 100%;
+    min-height: 0;
+    font-size: 18px;
+    padding: 0;
+    border: solid 0;
+    border-radius: 0;
+    border-bottom: solid 2px #ffd6d6;
+}
+
+tr.table-divider td {
+    font-size: 22px;
+    line-height: 1em;
+    font-weight: 700;
+}
+
+/* Colunas */
+th.manage-column.column-taxonomy-child_of,
+th.manage-column.column-featured_image {
+    display: none;
+}
+
+td.editorial_column.column-editorial_column {
+	display:block;
+    font-size: 18px;
+    text-transform: uppercase;
+    height: 1em;
+    color: #0073aa;
+    font-weight: 600;
+}
+
+span.post-state, span.edit_with_elementor {
+    display: none;
+}
+
+td.date.column-date {
+    display: none;
+}
+
+thead, tfoot, select#child_of {
+    display: none;
+}
+
+.inline-edit-row #post_parent, .inline-edit-row select[name=page_template] {
+    max-width: 45%;
+}
