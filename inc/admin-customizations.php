@@ -22,15 +22,15 @@ add_filter('get_user_option_admin_color', 'pundito_force_admin_color_scheme');
 // Custom CSS para ocultar elementos no tipo de post 'editorial'
 function pundito_custom_css_for_editorial() {
     if (get_post_type() == 'editorial' && wp_get_post_parent_id(get_the_ID()) == 0) {
-        echo '
-        <style type="text/css">
-            .wpra-reactions-wrap.wpra-plugin-container.wpra-rendered {
-                display: none;
-            }
-        </style>';
+        echo '<style type="text/css">.wpra-reactions-wrap.wpra-plugin-container.wpra-rendered { display: none; }</style>';
     }
 }
 add_action('wp_head', 'pundito_custom_css_for_editorial');
+
+// Carrega scripts de administração personalizados
+
+
+
 
 
 function enqueue_custom_admin_script() {
@@ -38,7 +38,7 @@ function enqueue_custom_admin_script() {
 }
 add_action('admin_enqueue_scripts', 'enqueue_custom_admin_script');
 
-
+// Filtra os argumentos do dropdown de páginas pai para limitar aos posts de nível superior
 function filter_parent_dropdown_pages_args($dropdown_args, $post) {
     if (isset($dropdown_args['post_type']) && $dropdown_args['post_type'] === 'editorial') {
         $dropdown_args['post_parent'] = 0;
@@ -52,52 +52,41 @@ add_filter('quick_edit_dropdown_pages_args', 'filter_parent_dropdown_pages_args'
 
 
 
-function set_editorial_menu_order( $post_id ) {
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        error_log('Skipping autosave for ' . $post_id);
-        return;
-    }
-
-    // Verifica se é um post parent e se o valor esperado está presente
-    if ( 'editorial' !== get_post_type( $post_id ) || !isset( $_POST['pundito_order_select'] ) ) {
-        error_log('Not the right post type or pundito_order_select not set for post ' . $post_id);
-        return;
-    }
-
-    // Evitar recursão ao salvar o post
-    static $updating_post = false;
-    if ( $updating_post ) {
-        error_log('Preventing recursion on post ' . $post_id);
-        return;
-    }
-
-    $updating_post = true;
-
-    // Mapeamento dos valores do dropdown para o menu_order
-    $order_map = array(
-        'Intro'     => 0,
-        'Monday'    => 1,
-        'Tuesday'   => 2,
-        'Wednesday' => 3,
-        'Thursday'  => 4,
-        'Friday'    => 5,
-        'Bonus'     => 6,
-        'Bonus 2'   => 7
+// Adiciona e configura os metaboxes para selecionar indústrias
+function pundito_add_industry_metabox() {
+    add_meta_box(
+        'pundito_industries',
+        __('Select Industries', 'text_domain'),
+        'pundito_industries_metabox_html',
+        ['editorial', 'industry_post'], // Adiciona aos post types necessários
+        'side',
+        'default'
     );
-
-    $selected_order = $_POST['pundito_order_select'];
-
-    if ( array_key_exists( $selected_order, $order_map ) ) {
-        // Atualiza o menu_order com o valor mapeado
-        wp_update_post( array(
-            'ID'         => $post_id,
-            'menu_order' => $order_map[$selected_order]
-        ));
-        error_log('Updated post ' . $post_id . ' to menu_order ' . $order_map[$selected_order]);
-    } else {
-        error_log('Selected order ' . $selected_order . ' is not a valid key for post ' . $post_id);
-    }
-
-    $updating_post = false;
 }
-add_action( 'save_post', 'set_editorial_menu_order' );
+add_action('add_meta_boxes', 'pundito_add_industry_metabox');
+
+function pundito_industries_metabox_html($post) {
+    $terms = get_terms(['taxonomy' => 'industry', 'hide_empty' => false]);
+    $selected_terms = wp_get_object_terms($post->ID, 'industry', array('fields' => 'ids'));
+
+    echo '<ul>';
+    foreach ($terms as $term) {
+        $is_checked = in_array($term->term_id, $selected_terms) ? ' checked' : '';
+        echo '<li><label>';
+        echo '<input type="checkbox" name="pundito_industries[]" value="' . esc_attr($term->term_id) . '"' . $is_checked . '> ';
+        echo esc_html($term->name);
+        echo '</label></li>';
+    }
+    echo '</ul>';
+}
+
+function pundito_save_industries($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+    if (!isset($_POST['pundito_industries'])) return;
+
+    // Limpa e garante que estamos trabalhando com IDs de inteiros
+    $industries = array_map('intval', $_POST['pundito_industries']); // Convertendo os IDs de string para integer
+    wp_set_object_terms($post_id, $industries, 'industry', false); // false para não anexar, mas substituir os termos existentes
+}
+add_action('save_post', 'pundito_save_industries');

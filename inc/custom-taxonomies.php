@@ -98,3 +98,43 @@ function pundito_register_taxonomy_child_of() {
 //add_action('init', 'pundito_register_taxonomy_report');
 add_action('init', 'pundito_register_taxonomy_episode_order');
 add_action('init', 'pundito_register_taxonomy_child_of');
+
+
+
+
+function pundito_register_industry_taxonomy() {
+    $labels = array(
+        'name'                       => _x('Industries', 'taxonomy general name', 'text_domain'),
+        'singular_name'              => _x('Industry', 'taxonomy singular name', 'text_domain'),
+        'search_items'               => __('Search Industries', 'text_domain'),
+        'popular_items'              => __('Popular Industries', 'text_domain'),
+        'all_items'                  => __('All Industries', 'text_domain'),
+        'parent_item'                => null,  // null para taxonomias não hierárquicas
+        'parent_item_colon'          => null,  // null para taxonomias não hierárquicas
+        'edit_item'                  => __('Edit Industry', 'text_domain'),
+        'update_item'                => __('Update Industry', 'text_domain'),
+        'add_new_item'               => __('Add New Industry', 'text_domain'),
+        'new_item_name'              => __('New Industry Name', 'text_domain'),
+        'separate_items_with_commas' => __('Separate industries with commas', 'text_domain'),
+        'add_or_remove_items'        => __('Add or remove industries', 'text_domain'),
+        'choose_from_most_used'      => __('Choose from the most used industries', 'text_domain'),
+        'not_found'                  => __('No industries found.', 'text_domain'),
+        'menu_name'                  => __('Industries', 'text_domain'),
+    );
+
+    $args = array(
+        'hierarchical'          => false,
+        'labels'                => $labels,
+        'show_ui'               => true,
+        'show_in_nav_menus'     => true,
+        'show_admin_column'     => true,
+        'update_count_callback' => '_update_post_term_count',
+        'query_var'             => true,
+        'rewrite'               => array('slug' => 'industry'),
+        'show_in_rest'          => true,  // Habilita suporte ao Gutenberg
+    );
+
+    register_taxonomy('industry', ['editorial', 'industry_post'], $args);
+}
+
+add_action('init', 'pundito_register_industry_taxonomy');
