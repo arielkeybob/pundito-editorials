@@ -14,8 +14,8 @@ add_action('add_meta_boxes', 'pundito_add_custom_metabox');
 function pundito_order_select_metabox_html($post) {
     $selected = get_post_meta($post->ID, '_pundito_order_select', true);
 
-    echo '<label for="pundito_order_select">' . __('Select Order:', 'text_domain') . '</label>';
-    echo '<select name="pundito_order_select" id="pundito_order_select" class="postbox">';
+    echo '<label for="pundito_order_select_dropdown">' . __('Select Order:', 'text_domain') . '</label>';
+    echo '<select name="pundito_order_select" id="pundito_order_select_dropdown" class="postbox">';
     echo '<option value="">' . __('Select an Option', 'text_domain') . '</option>';
 
     $options = [
