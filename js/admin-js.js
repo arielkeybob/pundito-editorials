@@ -19,5 +19,5 @@ jQuery(document).ready(function($) {
     updateOrderSelection();
     $parentSelector.change(updateOrderSelection);
     
-    console.log("Valor inicial de Order Select no carregamento:", $orderSelect.val());
+    //console.log("Valor inicial de Order Select no carregamento:", $orderSelect.val());
 });

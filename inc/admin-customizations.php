@@ -39,3 +39,12 @@ function enqueue_custom_admin_script() {
 add_action('admin_enqueue_scripts', 'enqueue_custom_admin_script');
 
 
+function filter_parent_dropdown_pages_args($dropdown_args, $post) {
+    if (isset($dropdown_args['post_type']) && $dropdown_args['post_type'] === 'editorial') {
+        $dropdown_args['post_parent'] = 0;
+        $dropdown_args['depth'] = 1; // Limita a busca para apenas o primeiro nível de posts
+    }
+    return $dropdown_args;
+}
+add_filter('page_attributes_dropdown_pages_args', 'filter_parent_dropdown_pages_args', 10, 2);
+add_filter('quick_edit_dropdown_pages_args', 'filter_parent_dropdown_pages_args', 10, 2);
