@@ -7,7 +7,8 @@ if (!$thumbnail_url) { // Se não houver uma imagem de destaque, use a imagem de
 error_log("Post ID: " . $post_data['id'] . " - Thumbnail URL: " . $thumbnail_url); // Log da URL da imagem de destaque
 
 ?>
-<div class="editorial-item <?php echo $post_data['class']; ?>" style="background-image: url('<?php echo esc_url($thumbnail_url); ?>');">
+<div class="editorial-item <?php echo $post_data['class']; ?>" style="background-image: url('<?php echo esc_url($thumbnail_url); ?>');" 
+    <?php if (!$post_data['view_children']) : ?>onclick="window.location='<?php echo get_edit_post_link($post_data['id']); ?>';" style="cursor: pointer;"<?php endif; ?>>
     <!-- Overlay Link for See Chapters, se for um post pai -->
     <?php if ($post_data['view_children']) : ?>
         <a href="<?php echo add_query_arg(['view_children_of' => $post_data['id']], admin_url('edit.php?post_type=' . $post_type)); ?>" class="full-card-link" title="<?php _e('See Chapters', 'text_domain'); ?>"></a>
