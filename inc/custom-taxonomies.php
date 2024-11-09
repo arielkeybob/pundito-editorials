@@ -54,7 +54,7 @@ function pundito_register_taxonomy_episode_order() {
     $args = array(
         'hierarchical'      => false,  // Não hierárquica
         'labels'            => $labels,
-        'show_ui'           => true,
+        'show_ui'           => false,
         'show_in_menu'      => true,
         'show_in_nav_menus' => true,
         'show_admin_column' => true,

@@ -208,3 +208,7 @@
 .editorial-item.editorial-child .editorial-date {
     order: 4; /* Quarto */
 }
+
+#menu_order, .menu-order-label-wrapper {
+    display: none !important;
+}

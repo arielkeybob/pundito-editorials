@@ -6,10 +6,11 @@ function pundito_add_custom_metabox() {
         'pundito_order_select_metabox_html',
         'editorial',
         'side',
-        'default'
+        'high'  // Altera a prioridade para 'high'
     );
 }
 add_action('add_meta_boxes', 'pundito_add_custom_metabox');
+
 
 function pundito_order_select_metabox_html($post) {
     $selected = get_post_meta($post->ID, '_pundito_order_select', true);

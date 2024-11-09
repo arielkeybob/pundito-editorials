@@ -9,9 +9,11 @@ jQuery(document).ready(function($) {
         if (parentValue === '') { // Verifica se o post é parent
             console.log("Sem parent selecionado, definindo 'Order Select' para 'Intro'");
             $orderSelect.val('Intro').prop('disabled', true); // Define 'Intro' e bloqueia para edição
+            $orderSelect.find('option[value="Intro"]').show(); // Mostra a opção 'Intro' caso esteja escondida
         } else {
             console.log("Parent selecionado, mantendo valor existente do 'Order Select'. Valor atual:", $orderSelect.val());
             $orderSelect.prop('disabled', false); // Permite edição se tiver um parent
+            $orderSelect.find('option[value="Intro"]').hide(); // Esconde a opção 'Intro'
         }
     }
 
