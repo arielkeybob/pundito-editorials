@@ -48,3 +48,56 @@ function filter_parent_dropdown_pages_args($dropdown_args, $post) {
 }
 add_filter('page_attributes_dropdown_pages_args', 'filter_parent_dropdown_pages_args', 10, 2);
 add_filter('quick_edit_dropdown_pages_args', 'filter_parent_dropdown_pages_args', 10, 2);
+
+
+
+
+function set_editorial_menu_order( $post_id ) {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        error_log('Skipping autosave for ' . $post_id);
+        return;
+    }
+
+    // Verifica se é um post parent e se o valor esperado está presente
+    if ( 'editorial' !== get_post_type( $post_id ) || !isset( $_POST['pundito_order_select'] ) ) {
+        error_log('Not the right post type or pundito_order_select not set for post ' . $post_id);
+        return;
+    }
+
+    // Evitar recursão ao salvar o post
+    static $updating_post = false;
+    if ( $updating_post ) {
+        error_log('Preventing recursion on post ' . $post_id);
+        return;
+    }
+
+    $updating_post = true;
+
+    // Mapeamento dos valores do dropdown para o menu_order
+    $order_map = array(
+        'Intro'     => 0,
+        'Monday'    => 1,
+        'Tuesday'   => 2,
+        'Wednesday' => 3,
+        'Thursday'  => 4,
+        'Friday'    => 5,
+        'Bonus'     => 6,
+        'Bonus 2'   => 7
+    );
+
+    $selected_order = $_POST['pundito_order_select'];
+
+    if ( array_key_exists( $selected_order, $order_map ) ) {
+        // Atualiza o menu_order com o valor mapeado
+        wp_update_post( array(
+            'ID'         => $post_id,
+            'menu_order' => $order_map[$selected_order]
+        ));
+        error_log('Updated post ' . $post_id . ' to menu_order ' . $order_map[$selected_order]);
+    } else {
+        error_log('Selected order ' . $selected_order . ' is not a valid key for post ' . $post_id);
+    }
+
+    $updating_post = false;
+}
+add_action( 'save_post', 'set_editorial_menu_order' );
