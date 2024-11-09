@@ -138,3 +138,49 @@ function pundito_register_industry_taxonomy() {
 }
 
 add_action('init', 'pundito_register_industry_taxonomy');
+
+
+function pundito_modify_editorial_post_screen() {
+    global $post, $pagenow;
+
+    if ($pagenow == 'post.php' && isset($_GET['post'])) {
+        $post_id = $_GET['post'];
+        $post = get_post($post_id);
+
+        if ($post->post_type == 'editorial') {
+            $parent_id = wp_get_post_parent_id($post_id);
+
+            if ($parent_id != 0) {  // Confere se o post é filho
+                add_action('admin_head', function() use ($parent_id, $post_id) {
+                    echo "<script type='text/javascript'>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Remove o botão 'Add New'
+                            var addButton = document.querySelector('.page-title-action');
+                            if (addButton) {
+                                addButton.remove();
+                            }
+
+                            // Adiciona o botão 'Add Chapter'
+                            var pageTitle = document.querySelector('.wp-heading-inline');
+                            if (pageTitle) {
+                                var addChapterButton = document.createElement('a');
+                                addChapterButton.href = '" . admin_url("post-new.php?post_type=editorial&post_parent={$parent_id}") . "';
+                                addChapterButton.className = 'page-title-action';
+                                addChapterButton.textContent = 'Add Chapter';
+                                pageTitle.parentNode.insertBefore(addChapterButton, pageTitle.nextSibling);
+                            }
+
+                            // Adiciona botão 'Back to Chapters'
+                            var backButton = document.createElement('a');
+                            backButton.href = '" . admin_url("edit.php?post_type=editorial&view_children_of={$parent_id}") . "';
+                            backButton.className = 'page-title-action';
+                            backButton.textContent = 'Back to Chapters';
+                            pageTitle.parentNode.insertBefore(backButton, pageTitle.nextSibling);
+                        });
+                    </script>";
+                });
+            }
+        }
+    }
+}
+add_action('load-post.php', 'pundito_modify_editorial_post_screen');
