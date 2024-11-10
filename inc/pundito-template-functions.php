@@ -8,7 +8,7 @@ function pundito_load_custom_editorial_template() {
     $screen = get_current_screen();
     if (isset($screen->post_type) && $screen->post_type === 'editorial') {
         $template_path = plugin_dir_path(__FILE__) . '../templates/';
-        $template_path .= isset($_GET['view_children_of']) ? 'custom-editorial-chapters.php' : 'custom-editorial-list.php';
+        $template_path .= isset($_GET['view_children_of']) ? 'custom-editorial-child-list.php' : 'custom-editorial-parent-list.php';
 
         if (file_exists($template_path)) {
             include $template_path;
