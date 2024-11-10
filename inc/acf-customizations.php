@@ -61,12 +61,21 @@ function pundito_order_select_metabox_html($post) {
 function pundito_save_order_select($post_id) {
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (!current_user_can('edit_post', $post_id)) return;
-    if (!isset($_POST['pundito_order_select']) || empty($_POST['pundito_order_select'])) return;
 
-    $order_value = sanitize_text_field($_POST['pundito_order_select']);
+    $is_parent = (wp_get_post_parent_id($post_id) == 0);
+    $order_value = isset($_POST['pundito_order_select']) ? sanitize_text_field($_POST['pundito_order_select']) : '';
+
+    // Para posts pai, força o valor 'Intro' caso nenhum valor seja submetido
+    if ($is_parent && empty($order_value)) {
+        $order_value = 'Intro';
+    }
+
+    // Atualiza o meta valor selecionado
     update_post_meta($post_id, '_pundito_order_select', $order_value);
 
-    // Associa o termo ao post
-    wp_set_post_terms($post_id, [$order_value], 'episode_order', false);
+    // Associa ou atualiza o termo da taxonomia ao post
+    if (!empty($order_value)) {
+        wp_set_post_terms($post_id, [$order_value], 'episode_order', false);
+    }
 }
 add_action('save_post_editorial', 'pundito_save_order_select');

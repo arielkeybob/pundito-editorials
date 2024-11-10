@@ -84,3 +84,15 @@ add_filter('wp_insert_post_data', 'configure_child_post_editorial', 10, 2);
 
 
 
+
+
+
+/*Frontend customizations*/
+add_action( 'elementor/query/filhos_do_post_pai', function( $query ) {
+    // Garanta que está na página certa e tem um ID de post pai
+    if (is_singular('editorial')) {
+        $post_id = get_the_ID();  // Assume que está visualizando o post pai
+        $query->set('post_parent', $post_id);
+        $query->set('post_type', 'editorial'); // Confirme se o tipo de post está correto
+    }
+});
