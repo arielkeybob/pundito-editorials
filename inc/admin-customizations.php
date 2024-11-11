@@ -27,11 +27,7 @@ function pundito_custom_css_for_editorial() {
 }
 add_action('wp_head', 'pundito_custom_css_for_editorial');
 
-// Carrega scripts de administração personalizados
-function enqueue_custom_admin_script() {
-    wp_enqueue_script('my-custom-admin-script', plugin_dir_url(__DIR__) . 'js/admin-js.js', array('jquery'), '1.0', true);
-}
-add_action('admin_enqueue_scripts', 'enqueue_custom_admin_script');
+
 
 // Filtra os argumentos do dropdown de páginas pai para limitar aos posts de nível superior
 function filter_parent_dropdown_pages_args($dropdown_args, $post) {

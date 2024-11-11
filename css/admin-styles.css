@@ -174,3 +174,8 @@
 
 /* Esconde o menu de ordem */
 #menu_order, .menu-order-label-wrapper { display: none !important; }
+
+
+#stepForm div {
+    margin-bottom: 20px;
+}
