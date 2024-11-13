@@ -8,7 +8,7 @@ require_once plugin_dir_path(__FILE__) . 'pundito-metaboxes.php';
 require_once plugin_dir_path(__FILE__) . 'pundito-template-functions.php';
 require_once plugin_dir_path(__FILE__) . 'pundito-editorial-config.php';
 require_once plugin_dir_path(__FILE__) . 'pundito-elementor-hooks.php';
-//require_once plugin_dir_path(__FILE__) . 'custom-add-new-page.php';
+
 
 // Funções de inicialização
 
