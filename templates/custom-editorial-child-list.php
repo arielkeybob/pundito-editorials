@@ -12,7 +12,7 @@ if (isset($_GET['view_children_of']) && !empty($_GET['view_children_of'])) {
     // Query para os posts filhos do editorial
     $args = [
         'post_type'      => 'editorial',
-        'post_status'    => 'publish',
+        'post_status'    => ['publish', 'draft'],
         'posts_per_page' => -1,
         'post_parent'    => $parent_id,
     ];

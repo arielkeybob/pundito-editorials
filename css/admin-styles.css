@@ -53,6 +53,7 @@
 .editorial-title a, .editorial-actions a {
     color: white;
     text-decoration: none;
+    width: 100%;
 }
 .editorial-actions a:hover {
     text-decoration: underline;
@@ -178,4 +179,23 @@
 
 #stepForm div {
     margin-bottom: 20px;
+}
+
+
+.status-success {
+    height: 10px;
+    width: 10px;
+    background-color: #28a745; /* green for published */
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-draft {
+    height: 10px;
+    width: 10px;
+    background-color: #ffc107; /* orange for draft */
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 5px;
 }

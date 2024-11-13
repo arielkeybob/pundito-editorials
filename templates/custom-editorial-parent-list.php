@@ -9,7 +9,7 @@ $selected_year = isset($_GET['year']) ? (int) $_GET['year'] : null;
 // Obtém os anos disponíveis para o filtro
 $years_args = [
     'post_type'      => $post_type,
-    'post_status'    => 'publish',
+    'post_status'    => ['publish', 'draft'],
     'posts_per_page' => -1,
     'post_parent'    => 0,
     'fields'         => 'ids',
@@ -33,7 +33,7 @@ wp_reset_postdata();
 // Consulta os posts principais, aplicando o filtro de ano, se houver
 $args = [
     'post_type'      => $post_type,
-    'post_status'    => 'publish',
+    'post_status'    => ['publish', 'draft'],
     'posts_per_page' => -1,
     'post_parent'    => 0,
     'orderby'        => 'date',
