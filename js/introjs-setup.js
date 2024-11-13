@@ -17,11 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
         pagenow = 'post';
     }
 
-    // Logs para depuração
-    console.log('pagenow:', pagenow);
-    console.log('post_type:', post_type);
-    console.log('bodyClasses:', bodyClasses);
-
     // Função para obter parâmetros da URL
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
@@ -48,7 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Verificar se estamos na tela de criação do post
     if (pagenow === 'post-new' && post_type === 'editorial') {
         // Iniciar o tour na tela de criação
-        introJs().setOptions({
+        var intro = introJs();
+        intro.setOptions({
             steps: [
                 {
                     element: '#titlewrap',
@@ -70,8 +66,50 @@ document.addEventListener('DOMContentLoaded', function() {
                     element: '#minor-publishing',
                     intro: 'Salve como rascunho antes de editar com o Elementor'
                 }
-            ]
-        }).start();
+            ],
+            showButtons: true,
+            showStepNumbers: true,
+            exitOnEsc: false,
+            exitOnOverlayClick: false
+        });
+
+        intro.onafterchange(function(targetElement) {
+            var currentStep = this._currentStep;
+
+            // Se estivermos na etapa do dropdown
+            if (currentStep === 1) { // Índice da etapa do dropdown é 1
+                var selectElement = document.getElementById('pundito_order_select_dropdown');
+                var nextButton = document.querySelector('.introjs-nextbutton');
+
+                // Função para verificar o valor selecionado
+                function checkSelection() {
+                    if (selectElement.value === '') {
+                        // Desabilitar o botão "Próximo"
+                        nextButton.classList.add('introjs-disabled');
+                        nextButton.style.pointerEvents = 'none';
+                    } else {
+                        // Habilitar o botão "Próximo"
+                        nextButton.classList.remove('introjs-disabled');
+                        nextButton.style.pointerEvents = '';
+                    }
+                }
+
+                // Verificar inicialmente
+                checkSelection();
+
+                // Adicionar listener ao dropdown
+                selectElement.addEventListener('change', checkSelection);
+            } else {
+                // Garantir que o botão "Próximo" esteja habilitado nas outras etapas
+                var nextButton = document.querySelector('.introjs-nextbutton');
+                if (nextButton) {
+                    nextButton.classList.remove('introjs-disabled');
+                    nextButton.style.pointerEvents = '';
+                }
+            }
+        });
+
+        intro.start();
 
         // Adicionar um input oculto ao formulário ao clicar em "Publicar" ou "Salvar rascunho"
         var publishButton = document.getElementById('publish');

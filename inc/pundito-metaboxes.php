@@ -4,7 +4,6 @@
  * Adiciona os metaboxes ao tipo de post 'editorial'
  */
 function pundito_add_editorial_metaboxes() {
-    // Metabox para a seleção de ordem
     add_meta_box(
         'pundito_order_select',
         __('Order Select', 'pundito'),
@@ -14,7 +13,6 @@ function pundito_add_editorial_metaboxes() {
         'high'
     );
 
-    // Metabox para a seleção de indústrias
     add_meta_box(
         'pundito_industries',
         __('Select Industries', 'pundito'),
@@ -36,7 +34,7 @@ function pundito_render_order_select_metabox($post) {
 
     $options = ['Intro', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Bonus', 'Bonus 2'];
     echo '<label for="pundito_order_select_dropdown">' . __('Select Order:', 'pundito') . '</label>';
-    echo '<select name="pundito_order_select" id="pundito_order_select_dropdown">';
+    echo '<select name="pundito_order_select" id="pundito_order_select_dropdown" required>'; // Adicionado atributo required
     echo '<option value="">' . __('Select an Option', 'pundito') . '</option>';
 
     foreach ($options as $option) {
@@ -78,6 +76,7 @@ function pundito_save_order_select($post_id) {
     $order_value = isset($_POST['pundito_order_select']) ? sanitize_text_field($_POST['pundito_order_select']) : '';
     $is_parent = (wp_get_post_parent_id($post_id) === 0);
 
+    // Garante que 'Intro' seja definido para posts pais sem seleção de ordem
     if ($is_parent && empty($order_value)) {
         $order_value = 'Intro';
     }

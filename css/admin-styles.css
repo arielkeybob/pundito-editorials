@@ -122,12 +122,10 @@
     margin: 20px;
     height: 150px;
     background: rgba(0, 0, 0, 0.3);
+    background-size: cover;
 }
 
-/* Conteúdo do Item Child */
-.editorial-item.editorial-child .editorial-content {
-    background: rgba(3, 23, 153, 0.548);
-}
+
 
 /* Overlay de Ícone */
 .icon-overlay {
@@ -148,6 +146,8 @@
 
 /* Estilos de Conteúdo para Posts Filhos */
 .editorial-item.editorial-child .editorial-content {
+    height: 150px;
+    background: rgba(3, 23, 153, 0.548);
     display: flex;
     flex-direction: column;
 }

@@ -26,7 +26,7 @@ function pundito_register_editorial_post_type() {
         'singular_name'      => __('Editorial'),
         'menu_name'          => __('Editorials'),
         'add_new'            => __('Add New'),
-        'add_new_item'       => __('Add New Editorial'),
+        'add_new_item'       => __('Add New Week'),
         'edit_item'          => __('Edit Editorial'),
         'view_item'          => __('View Editorial'),
         'all_items'          => __('All Editorials'),
