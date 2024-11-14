@@ -43,3 +43,15 @@ function delete_post_children($post_id) {
         }
     }
 }
+
+
+// Permitir posts rascunhos serem  parents
+function custom_editorial_parent_pages_args($args, $post) {
+    // Verificar se o tipo de post atual é 'editorial'
+    if (isset($post->post_type) && $post->post_type === 'editorial') {
+        $args['post_status'] = array('publish', 'draft'); // Permite rascunhos como pais
+    }
+    return $args;
+}
+add_filter('page_attributes_dropdown_pages_args', 'custom_editorial_parent_pages_args', 10, 2);
+add_filter('quick_edit_dropdown_pages_args', 'custom_editorial_parent_pages_args', 10, 2);
