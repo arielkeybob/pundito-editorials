@@ -21,7 +21,8 @@ if (isset($_GET['view_children_of']) && !empty($_GET['view_children_of'])) {
     
     <div class="wrap">
         <h1><?php echo sprintf(__('Chapters for %s', 'text_domain'), get_the_title($parent_id)); ?></h1>
-        <a href="<?php echo esc_url(admin_url('edit.php?post_type=editorial')); ?>">&laquo; <?php _e('Back to Editorials', 'text_domain'); ?></a>
+        <a href="<?php echo esc_url(admin_url('edit.php?post_type=editorial')); ?>" class="page-title-action">&laquo; <?php _e('Back to Weeks', 'text_domain'); ?></a>
+        <a href="<?php echo esc_url(admin_url('post-new.php?post_type=editorial&post_parent=' . $parent_id)); ?>" class="page-title-action"><?php _e('Add Chapter to this Week', 'text_domain'); ?></a>
         
         <div class="editorial-chapters-list-container">
             <?php
@@ -40,7 +41,7 @@ if (isset($_GET['view_children_of']) && !empty($_GET['view_children_of'])) {
                     include('editorial-item-card.php');
                 }
             } else {
-                echo '<div class="editorial-item"><p>' . __('No chapters found.', 'text_domain') . '</p></div>';
+                echo '<div class="notice notice-warning"><p>' . __('No chapters found.', 'text_domain') . '</p></div>';
             }
             wp_reset_postdata();
             ?>
