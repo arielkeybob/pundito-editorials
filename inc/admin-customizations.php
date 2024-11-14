@@ -87,3 +87,10 @@ function pundito_modify_editorial_post_screen() {
     }
 }
 add_action('load-post.php', 'pundito_modify_editorial_post_screen');
+
+
+
+function pundito_remove_add_new_sub_menu() {
+    remove_submenu_page('edit.php?post_type=editorial', 'post-new.php?post_type=editorial');
+}
+add_action('admin_menu', 'pundito_remove_add_new_sub_menu');

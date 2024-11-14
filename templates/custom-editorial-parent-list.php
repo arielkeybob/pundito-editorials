@@ -62,22 +62,23 @@ $pages = ceil($total_groups / $posts_per_group);
 $current_page = max(1, min($paged, $pages));
 $current_groups = array_slice($groups, ($current_page - 1) * $posts_per_group, $posts_per_group);
 
-// Formulário de Filtro de Ano
 ?>
-<form method="get" action="">
-    <select name="year" onchange="this.form.submit()">
-        <option value=""><?php _e('Select Year', 'text_domain'); ?></option>
-        <?php foreach ($years as $year): ?>
-            <option value="<?php echo esc_attr($year); ?>" <?php selected($selected_year, $year); ?>>
-                <?php echo esc_html($year); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>" />
-</form>
-
 <div class="wrap">
     <h1><?php _e('Editorials', 'text_domain'); ?></h1>
+    <a href="<?php echo admin_url('post-new.php?post_type=editorial'); ?>" class="page-title-action"><?php _e('New Week', 'text_domain'); ?></a> <!-- Botão Adicionar Nova Semana -->
+
+    <form method="get" action="" style="display: inline-block; margin-left: 20px;">
+        <select name="year" onchange="this.form.submit()">
+            <option value=""><?php _e('Select Year', 'text_domain'); ?></option>
+            <?php foreach ($years as $year): ?>
+                <option value="<?php echo esc_attr($year); ?>" <?php selected($selected_year, $year); ?>>
+                    <?php echo esc_html($year); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>" />
+    </form>
+
     <div class="editorial-list-container">
         <?php foreach ($current_groups as $month_year => $posts): ?>
             <div class="monthly-group">
@@ -105,3 +106,4 @@ $current_groups = array_slice($groups, ($current_page - 1) * $posts_per_group, $
 <?php
 wp_reset_postdata();
 require_once(ABSPATH . 'wp-admin/admin-footer.php');
+?>

@@ -21,12 +21,14 @@ function pundito_register_library_post_type() {
  * Registra o post type 'Editorial'
  */
 function pundito_register_editorial_post_type() {
+    $is_child = isset($_GET['post_parent']) && !empty($_GET['post_parent']);
+
     $labels = array(
         'name'               => __('Editorials'),
         'singular_name'      => __('Editorial'),
         'menu_name'          => __('Editorials'),
         'add_new'            => __('Add New'),
-        'add_new_item'       => __('Add New Week'),
+        'add_new_item'       => $is_child ? __('Add New Chapter') : __('Add New Week'),
         'edit_item'          => __('Edit Editorial'),
         'view_item'          => __('View Editorial'),
         'all_items'          => __('All Editorials'),
@@ -59,6 +61,7 @@ function pundito_register_editorial_post_type() {
 
     register_post_type('editorial', $args);
 }
+
 
 /**
  * Registra o post type 'Industry Posts'

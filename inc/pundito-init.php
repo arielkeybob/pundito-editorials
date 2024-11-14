@@ -10,8 +10,6 @@ require_once plugin_dir_path(__FILE__) . 'pundito-editorial-config.php';
 require_once plugin_dir_path(__FILE__) . 'pundito-elementor-hooks.php';
 require_once plugin_dir_path(__FILE__) . 'post-handlers.php';
 
-// Funções de inicialização
-
 // Enfileirar estilos administrativos
 function pundito_editorials_enqueue_admin_assets() {
     wp_enqueue_style(
@@ -21,14 +19,12 @@ function pundito_editorials_enqueue_admin_assets() {
 }
 add_action('admin_enqueue_scripts', 'pundito_editorials_enqueue_admin_assets');
 
-// Enfileirar scripts personalizados na tela de edição/criação do post type 'editorial'
 function pundito_enqueue_custom_admin_js($hook) {
-    global $post_type;
-    if ( ( $hook !== 'post-new.php' && $hook !== 'post.php' ) || $post_type !== 'editorial' ) {
+    global $post;
+    if (( $hook !== 'post-new.php' && $hook !== 'post.php' ) || get_post_type($post) !== 'editorial' ) {
         return;
     }
 
-    // Enfileirar o script personalizado
     wp_enqueue_script(
         'custom-admin-js',
         plugin_dir_url(__FILE__) . '../js/admin-js.js',
@@ -37,13 +33,13 @@ function pundito_enqueue_custom_admin_js($hook) {
         true
     );
 
-    // Localizar o script para incluir valores dinâmicos de PHP
-    wp_localize_script('custom-admin-js', 'meusDados', array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce'   => wp_create_nonce('meu_nonce_especifico')
+    $is_child = $post && $post->post_parent ? 'yes' : 'no';
+    wp_localize_script('custom-admin-js', 'PostData', array(
+        'isChild' => $is_child
     ));
 }
 add_action('admin_enqueue_scripts', 'pundito_enqueue_custom_admin_js');
+
 
 // Enfileirar o intro.js e o script de configuração na tela de edição/criação do 'editorial'
 function pundito_enqueue_introjs($hook) {
@@ -52,42 +48,35 @@ function pundito_enqueue_introjs($hook) {
         return;
     }
 
-    // Enfileirar o estilo do intro.js via CDN
-    wp_enqueue_style(
-        'introjs-css',
-        'https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css'
-    );
-
-    // Enfileirar o script do intro.js via CDN
-    wp_enqueue_script(
-        'introjs-js',
-        'https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js',
-        array('jquery'),
-        null,
-        true
-    );
-
-    // Enfileirar o script de configuração
-    wp_enqueue_script(
-        'introjs-setup',
-        plugin_dir_url(__FILE__) . '../js/introjs-setup.js',
-        array('introjs-js'),
-        null,
-        true
-    );
+    wp_enqueue_style('introjs-css', 'https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css');
+    wp_enqueue_script('introjs-js', 'https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js', array('jquery'), null, true);
+    wp_enqueue_script('introjs-setup', plugin_dir_url(__FILE__) . '../js/introjs-setup.js', array('introjs-js'), null, true);
 }
 add_action('admin_enqueue_scripts', 'pundito_enqueue_introjs');
 
-
-
-// Modificar a URL de redirecionamento após salvar/publicar para adicionar 'introjs_continue' se necessário
 function pundito_modify_redirect_location($location, $post_id) {
-    if ( get_post_type($post_id) === 'editorial' && isset($_POST['introjs_continue']) && $_POST['introjs_continue'] == '1' ) {
-        // Adicionar o parâmetro à URL de redirecionamento
+    if (get_post_type($post_id) === 'editorial' && isset($_POST['introjs_continue']) && $_POST['introjs_continue'] == '1') {
         $location = add_query_arg('introjs_continue', '1', $location);
     }
     return $location;
 }
 add_filter('redirect_post_location', 'pundito_modify_redirect_location', 10, 2);
 
-?>
+function add_editorial_body_class($classes) {
+    global $post;
+    if ($post->post_type === 'editorial') {
+        if (wp_get_post_parent_id($post->ID) > 0) {
+            if (!is_array($classes)) {
+                $classes = explode(' ', $classes);
+            }
+            $classes[] = 'editorial-child';
+        } else {
+            if (!is_array($classes)) {
+                $classes = explode(' ', $classes);
+            }
+            $classes[] = 'editorial-parent';
+        }
+    }
+    return $classes;
+}
+add_filter('admin_body_class', 'add_editorial_body_class');
