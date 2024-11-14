@@ -15,3 +15,6 @@ if (!defined('ABSPATH')) {
 
 // Carregar inicializações e funcionalidades
 require_once plugin_dir_path(__FILE__) . 'inc/pundito-init.php';
+
+
+
