@@ -65,9 +65,11 @@ $current_groups = array_slice($groups, ($current_page - 1) * $posts_per_group, $
 ?>
 <div class="wrap">
     <h1><?php _e('Editorials', 'text_domain'); ?></h1>
-    <a href="<?php echo admin_url('post-new.php?post_type=editorial'); ?>" class="page-title-action"><?php _e('New Week', 'text_domain'); ?></a> <!-- Botão Adicionar Nova Semana -->
+    <a href="<?php echo admin_url('post-new.php?post_type=editorial'); ?>" class="page-title-action add-chapter-btn"><?php _e('New Week', 'text_domain'); ?></a> <!-- Botão Adicionar Nova Semana -->
 
-    <form method="get" action="" style="display: inline-block; margin-left: 20px;">
+    <div class="parent-list-filters">
+    <h4 >Filters:</h4>
+    <form method="get" action="" style="display: inline-block;">
         <select name="year" onchange="this.form.submit()">
             <option value=""><?php _e('Select Year', 'text_domain'); ?></option>
             <?php foreach ($years as $year): ?>
@@ -78,6 +80,7 @@ $current_groups = array_slice($groups, ($current_page - 1) * $posts_per_group, $
         </select>
         <input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>" />
     </form>
+    </div>
 
     <div class="editorial-list-container">
         <?php foreach ($current_groups as $month_year => $posts): ?>
