@@ -54,13 +54,16 @@ function pundito_enqueue_introjs($hook) {
 }
 add_action('admin_enqueue_scripts', 'pundito_enqueue_introjs');
 
+// Modify the redirect URL after saving/publishing to include 'introjs_continue' if necessary
 function pundito_modify_redirect_location($location, $post_id) {
     if (get_post_type($post_id) === 'editorial' && isset($_POST['introjs_continue']) && $_POST['introjs_continue'] == '1') {
+        // Add the parameter to the redirect URL
         $location = add_query_arg('introjs_continue', '1', $location);
     }
     return $location;
 }
 add_filter('redirect_post_location', 'pundito_modify_redirect_location', 10, 2);
+
 
 function add_editorial_body_class($classes) {
     global $post;
