@@ -6,36 +6,36 @@ document.addEventListener('DOMContentLoaded', function() {
     var steps = isChild ? [
         {
             element: '#titlewrap',
-            intro: 'Digite o título deste chapter aqui.'
+            intro: 'Enter the title for this chapter here.'
         },
         {
             element: '#pundito_order_select',
-            intro: 'Defina dia da semana ou (Ordem)'
+            intro: 'Set the day of the week or order.'
         },
         {
             element: '#postimagediv',
-            intro: 'Defina a imagem destacada do chapter aqui.'
+            intro: 'Set the featured image for the chapter here.'
         },
         {
             element: '#pundito_industries',
-            intro: 'Defina se o post também aparecerá em algum "Industry" específico'
+            intro: 'Determine if the post will also appear in a specific "Industry".'
         },
         {
             element: '#minor-publishing',
-            intro: 'Salve como rascunho antes de editar com o Elementor'
+            intro: 'Save as draft before editing with Elementor.'
         }
     ] : [
         {
             element: '#titlewrap',
-            intro: 'Digite o título deste week aqui.'
+            intro: 'Enter the title for this week here.'
         },
         {
             element: '#postimagediv',
-            intro: 'Defina a imagem destacada do week aqui.'
+            intro: 'Set the featured image for the week here.'
         },
         {
             element: '#minor-publishing',
-            intro: 'Salve como rascunho antes de editar com o Elementor'
+            intro: 'Save as draft before editing with Elementor.'
         }
     ];
 

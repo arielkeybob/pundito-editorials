@@ -30,26 +30,27 @@ if ($years_query->have_posts()) {
 }
 wp_reset_postdata();
 
-// Preparar o filtro de meses baseado no ano selecionado
 $months = [];
 if ($selected_year) {
-    $months_args = [
+    // Query para pegar meses após selecionar um ano
+    $months_query = new WP_Query([
         'post_type'      => $post_type,
         'post_status'    => ['publish', 'draft'],
         'posts_per_page' => -1,
         'post_parent'    => 0,
         'orderby'        => 'date',
         'order'          => 'DESC',
-        'date_query'     => [['year' => $selected_year]]
-    ];
+        'date_query'     => [['year' => $selected_year]],
+        'fields' => 'ids'
+    ]);
 
-    $months_query = new WP_Query($months_args);
     if ($months_query->have_posts()) {
         while ($months_query->have_posts()) {
             $months_query->the_post();
-            $month_num = get_the_date('n');
-            $months[$month_num] = get_the_date('F');
+            $month = get_the_date('n');
+            $months[$month] = get_the_date('F');
         }
+        $months = array_unique($months);
     }
     wp_reset_postdata();
 }
@@ -61,11 +62,7 @@ $args = [
     'post_parent'    => 0,
     'orderby'        => 'date',
     'order'          => 'DESC',
-    'date_query'     => [
-        'relation' => 'AND',
-        [['year' => $selected_year]],
-        $selected_month ? [['month' => $selected_month]] : []
-    ]
+    'date_query'     => [['year' => $selected_year, 'month' => $selected_month]]
 ];
 
 $parent_posts = new WP_Query($args);
@@ -91,31 +88,28 @@ $current_groups = array_slice($groups, ($current_page - 1) * $posts_per_group, $
 <div class="wrap">
     <h1><?php _e('Editorials', 'text_domain'); ?></h1>
     <a href="<?php echo admin_url('post-new.php?post_type=editorial'); ?>" class="page-title-action"><?php _e('New Week', 'text_domain'); ?></a>
-    <form method="get" action="<?php echo admin_url('edit.php'); ?>">
-        <select name="year" onchange="this.form.submit()">
-            <option value=""><?php _e('All years', 'text_domain'); ?></option>
+    <a href="<?php echo admin_url('edit.php?post_type=editorial&post_status=trash'); ?>" class="page-title-action"><span class="dashicons dashicons-trash"></span></a>
+    <form method="get" action="" class="admin-editorial-filters year-month-filter">
+        <select name="year" onchange="this.form.submit()" class="year-select">
+            <option value=""><?php _e('Select Year', 'text_domain'); ?></option>
             <?php foreach ($years as $year): ?>
                 <option value="<?php echo esc_attr($year); ?>" <?php selected($selected_year, $year); ?>>
                     <?php echo esc_html($year); ?>
                 </option>
             <?php endforeach; ?>
         </select>
-        <input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>" />
-    </form>
-    <?php if ($selected_year): ?>
-        <form method="get" action="<?php echo admin_url('edit.php'); ?>">
-            <select name="month" onchange="this.form.submit()">
+        <?php if (!empty($months)): ?>
+            <select name="month" onchange="this.form.submit()" class="month-select">
                 <option value=""><?php _e('Select Month', 'text_domain'); ?></option>
-                <?php foreach ($months as $month_num => $month_name): ?>
-                    <option value="<?php echo esc_attr($month_num); ?>" <?php selected($selected_month, $month_num); ?>>
-                        <?php echo esc_html($month_name); ?>
+                <?php foreach ($months as $monthNum => $monthName): ?>
+                    <option value="<?php echo esc_attr($monthNum); ?>" <?php selected($selected_month, $monthNum); ?>>
+                        <?php echo esc_html($monthName); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <input type="hidden" name="year" value="<?php echo esc_attr($selected_year); ?>" />
-            <input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>" />
-        </form>
-    <?php endif; ?>
+        <?php endif; ?>
+        <input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>" />
+    </form>
     <div class="editorial-list-container">
         <?php foreach ($current_groups as $month_year => $posts): ?>
             <div class="monthly-group">

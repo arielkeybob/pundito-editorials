@@ -131,7 +131,7 @@
 /* Overlay de Ícone */
 .icon-overlay {
     position: absolute;
-    top: 45%;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 60px;
@@ -203,7 +203,34 @@
 a.page-title-action.add-chapter-btn{
     top: 3px;
 }
+a.page-title-action{
+    margin: 20px 0;
+}
 
 .parent-list-filters h4 {
     margin: 30px 0 10px 0;
+}
+
+
+.admin-editorial-filters select {
+    min-width: 150px;
+    height: 34px;
+    padding: 0 24px 0 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    border: 1px solid #ddd;
+    color: #32373c;
+    background-color: #ffffff;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"%3E%3Cpath d="M5 8l5 5 5-5H5z"%3E%3C/path%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px 16px;
+    cursor: pointer;
+}
+
+.admin-editorial-filters select:focus {
+    border-color: #007cba;
+    box-shadow: 0 0 0 1px #007cba;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
 }
