@@ -3,7 +3,7 @@
  * Plugin Name: Pundito Editorials
  * Plugin URI: https://thedigitaldance.com
  * Description: Plugin personalizado para a funcionalidade editorial.
- * Version: 1.3.4
+ * Version: 1.3.5
  * Author: The Digital Dance & Ariel Souza
  * Author URI: https://arielsouza.com.br
  * License: GPL2
@@ -18,3 +18,4 @@ require_once plugin_dir_path(__FILE__) . 'inc/pundito-init.php';
 
 
 
+// Apenas um comentário para saber se o update funcionou //
