@@ -134,3 +134,32 @@ document.addEventListener('DOMContentLoaded', function() {
         removeQueryParam('introjs_continue');
     }
 });
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona o link pelo ID específico
+    var linkToSetThumbnail = document.querySelector('#set-post-thumbnail');
+
+    if (linkToSetThumbnail) {
+        linkToSetThumbnail.addEventListener('click', function(event) {
+            console.log('Link para definir a imagem de destaque clicado.');
+
+            // Aguarda 1 segundo após o clique
+            setTimeout(function() {
+                var modalElement = document.getElementById('__wp-uploader-id-2');
+                if (modalElement) {
+                    modalElement.classList.add('introjs-showElement');
+                    console.log('Classe introjs-showElement adicionada à div __wp-uploader-id-2.');
+                } else {
+                    console.log('Div com ID __wp-uploader-id-2 não encontrada.');
+                }
+            }, 1000);
+
+            // Comente a linha abaixo se desejar permitir que o thickbox abra normalmente
+            // event.preventDefault();
+        });
+    } else {
+        console.log('Link para definir a imagem de destaque não encontrado.');
+    }
+});

@@ -9,7 +9,7 @@ require_once plugin_dir_path(__FILE__) . 'pundito-template-functions.php';
 require_once plugin_dir_path(__FILE__) . 'pundito-editorial-config.php';
 require_once plugin_dir_path(__FILE__) . 'pundito-elementor-hooks.php';
 require_once plugin_dir_path(__FILE__) . 'post-handlers.php';
-require_once plugin_dir_path(__FILE__) . 'update-checker.php';
+
 
 // Enfileirar estilos administrativos
 function pundito_editorials_enqueue_admin_assets() {
