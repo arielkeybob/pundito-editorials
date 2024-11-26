@@ -1,16 +1,28 @@
 jQuery(document).ready(function($) {
     var $parentSelector = $('#parent_id');
     var $orderSelect = $('#pundito_order_select_dropdown');
+    var $menuOrder = $('#menu_order');
+
+    var orderMap = {
+        'Intro': 0,
+        'Monday': 1,
+        'Tuesday': 2,
+        'Wednesday': 3,
+        'Thursday': 4,
+        'Friday': 5,
+        'Bonus': 6,
+        'Bonus 2': 7
+    };
 
     function updateOrderSelection() {
         var parentValue = $parentSelector.val();
-        console.log("Parent ID selecionado: ", parentValue);
+        //console.log("Parent ID selecionado: ", parentValue);
 
         if (parentValue === '') {
-            console.log("Sem parent selecionado, definindo 'Order Select' para 'Intro'");
+            //console.log("Sem parent selecionado, definindo 'Order Select' para 'Intro'");
             $orderSelect.val('Intro').prop('disabled', true).find('option').hide().filter('[value="Intro"]').show();
         } else {
-            console.log("Enviando dados AJAX com parent ID:", parentValue);
+            //console.log("Enviando dados AJAX com parent ID:", parentValue);
             $orderSelect.prop('disabled', false).find('option[value="Intro"]').hide();
             $.ajax({
                 url: meusDados.ajaxurl,
@@ -30,11 +42,23 @@ jQuery(document).ready(function($) {
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("Erro AJAX:", textStatus, errorThrown);
+                    //console.error("Erro AJAX:", textStatus, errorThrown);
                 }
             });
         }
     }
+
+    // Atualiza o 'menu_order' sempre que 'pundito_order_select' mudar
+    $orderSelect.change(function() {
+        var selectedOrder = $(this).val();
+        var mappedOrder = orderMap[selectedOrder];
+        
+        if (mappedOrder !== undefined && $menuOrder.length > 0) {
+            $menuOrder.val(mappedOrder);  // Atualiza o campo 'menu_order'
+            //console.log("Order selecionado:", selectedOrder, "Mapped:", mappedOrder);
+            //console.log("Menu order atualizado para:", mappedOrder);
+        }
+    });
 
     updateOrderSelection();
     $parentSelector.change(updateOrderSelection);

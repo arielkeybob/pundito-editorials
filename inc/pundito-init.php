@@ -22,7 +22,12 @@ add_action('admin_enqueue_scripts', 'pundito_editorials_enqueue_admin_assets');
 
 function pundito_enqueue_custom_admin_js($hook) {
     global $post;
-    if (( $hook !== 'post-new.php' && $hook !== 'post.php' ) || get_post_type($post) !== 'editorial' ) {
+
+    if ( $hook !== 'post-new.php' && $hook !== 'post.php' ) {
+        return;
+    }
+
+    if (!is_object($post) || get_post_type($post) !== 'editorial') {
         return;
     }
 
@@ -33,13 +38,15 @@ function pundito_enqueue_custom_admin_js($hook) {
         '1.0',
         true
     );
+ 
 
-    $is_child = $post && $post->post_parent ? 'yes' : 'no';
+    $is_child = $post->post_parent ? 'yes' : 'no';
     wp_localize_script('custom-admin-js', 'PostData', array(
         'isChild' => $is_child
     ));
 }
 add_action('admin_enqueue_scripts', 'pundito_enqueue_custom_admin_js');
+
 
 
 // Enfileirar o intro.js e o script de configuração na tela de edição/criação do 'editorial'
@@ -68,19 +75,22 @@ add_filter('redirect_post_location', 'pundito_modify_redirect_location', 10, 2);
 
 function add_editorial_body_class($classes) {
     global $post;
-    if ($post->post_type === 'editorial') {
-        if (wp_get_post_parent_id($post->ID) > 0) {
-            if (!is_array($classes)) {
-                $classes = explode(' ', $classes);
-            }
-            $classes[] = 'editorial-child';
-        } else {
-            if (!is_array($classes)) {
-                $classes = explode(' ', $classes);
-            }
-            $classes[] = 'editorial-parent';
+    if (!is_object($post) || $post->post_type !== 'editorial') {
+        return $classes;
+    }
+
+    if (wp_get_post_parent_id($post->ID) > 0) {
+        if (!is_array($classes)) {
+            $classes = explode(' ', $classes);
         }
+        $classes[] = 'editorial-child';
+    } else {
+        if (!is_array($classes)) {
+            $classes = explode(' ', $classes);
+        }
+        $classes[] = 'editorial-parent';
     }
     return $classes;
 }
-add_filter('admin_body_class', 'add_editorial_body_class');
+
+
