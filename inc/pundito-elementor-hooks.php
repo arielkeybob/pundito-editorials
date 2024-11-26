@@ -11,11 +11,20 @@ function pundito_elementor_filter_children_query($query) {
 add_action('elementor/query/filhos_do_post_pai', 'pundito_elementor_filter_children_query');
 
 
-function pundito_elementor_filter_sibling_query($query) {
-    if ( $query->get( 'pundito_sibling_query_modified' ) ) {
+function pundito_elementor_filter_sibling_or_children_query($query) {
+    // Usa uma variável estática para evitar recursão
+    static $running = false;
+    if ( $running ) {
         return;
     }
-    $query->set( 'pundito_sibling_query_modified', true );
+    $running = true;
+
+    // Verifica se já modificamos esta query para evitar recursão
+    if ( $query->get( 'pundito_sibling_or_children_query_modified' ) ) {
+        $running = false;
+        return;
+    }
+    $query->set( 'pundito_sibling_or_children_query_modified', true );
 
     global $post;
 
@@ -26,44 +35,55 @@ function pundito_elementor_filter_sibling_query($query) {
         $parent_id = wp_get_post_parent_id( $current_post_id );
         error_log('ID do post pai: ' . ( $parent_id ? $parent_id : 'Nenhum' ));
 
-        remove_action( 'elementor/query/irmaos_do_post_atual', 'pundito_elementor_filter_sibling_query' );
-
         if ( $parent_id ) {
-            $siblings = get_posts( array(
+            // O post tem um pai, busca os irmãos (posts com o mesmo pai)
+            error_log('Exibindo irmãos do post atual.');
+
+            $posts = get_posts( array(
                 'post_type'        => 'editorial',
                 'post_parent'      => $parent_id,
                 'posts_per_page'   => -1,
                 'fields'           => 'ids',
-                'suppress_filters' => true,
+                'orderby'          => 'menu_order',
+                'order'            => 'ASC',
+                'suppress_filters' => true, // Suprime filtros para evitar loops
             ) );
         } else {
-            $siblings = get_posts( array(
+            // O post não tem pai, busca os filhos dele
+            error_log('Exibindo filhos do post atual.');
+
+            $posts = get_posts( array(
                 'post_type'        => 'editorial',
-                'post_parent'      => 0,
+                'post_parent'      => $current_post_id,
                 'posts_per_page'   => -1,
                 'fields'           => 'ids',
-                'suppress_filters' => true,
+                'orderby'          => 'menu_order',
+                'order'            => 'ASC',
+                'suppress_filters' => true, // Suprime filtros para evitar loops
             ) );
         }
 
-        add_action( 'elementor/query/irmaos_do_post_atual', 'pundito_elementor_filter_sibling_query' );
-
-        if ( ! is_array( $siblings ) ) {
-            $siblings = array();
+        // Garante que $posts seja sempre um array
+        if ( ! is_array( $posts ) ) {
+            $posts = array();
         }
 
-        if ( ! in_array( $current_post_id, $siblings ) ) {
-            $siblings[] = $current_post_id;
+        // Inclui o próprio post atual na lista, se ainda não estiver
+        if ( ! in_array( $current_post_id, $posts ) ) {
+            $posts[] = $current_post_id;
         }
 
-        $post_ids = array_unique( $siblings );
+        // Remove duplicatas
+        $post_ids = array_unique( $posts );
 
+        // Log dos posts encontrados
         if ( is_array( $post_ids ) ) {
             error_log('Posts encontrados: ' . implode(', ', $post_ids));
         } else {
             error_log('Nenhum post encontrado.');
         }
 
+        // Configura a query do Elementor
         $query->set( 'post_type', 'editorial' );
         $query->set( 'post__in', $post_ids );
         $query->set( 'orderby', 'menu_order' );
@@ -71,7 +91,10 @@ function pundito_elementor_filter_sibling_query($query) {
         $query->set( 'posts_per_page', -1 );
     } else {
         error_log('Não foi possível obter o ID do post atual ou o post não é do tipo "editorial".');
+        $running = false;
         return;
     }
+
+    $running = false;
 }
-add_action( 'elementor/query/irmaos_do_post_atual', 'pundito_elementor_filter_sibling_query' );
+add_action( 'elementor/query/irmaos_do_post_atual', 'pundito_elementor_filter_sibling_or_children_query', 10 );
