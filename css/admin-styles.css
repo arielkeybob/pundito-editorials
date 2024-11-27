@@ -174,7 +174,7 @@
 }
 
 /* Esconde o menu de ordem */
-#menu_order, .menu-order-label-wrapper { /*display: none !important; */}
+#menu_order, .menu-order-label-wrapper { display: none !important; }
 
 
 #stepForm div {

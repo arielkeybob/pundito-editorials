@@ -9,12 +9,14 @@ if (isset($_GET['view_children_of']) && !empty($_GET['view_children_of'])) {
 
     require_once(ABSPATH . 'wp-admin/admin-header.php');
 
-    // Query para os posts filhos do editorial
+    // Query para os posts filhos do editorial, ordenados por 'menu_order' ascendente
     $args = [
         'post_type'      => 'editorial',
         'post_status'    => ['publish', 'draft'],
         'posts_per_page' => -1,
         'post_parent'    => $parent_id,
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
     ];
     $child_posts = new WP_Query($args);
     ?>
