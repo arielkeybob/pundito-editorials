@@ -182,7 +182,7 @@
 }
 
 
-.status-success {
+.editorial-item .status-success {
     height: 10px;
     width: 10px;
     background-color: #28a745; /* green for published */
@@ -191,7 +191,7 @@
     margin-right: 5px;
 }
 
-.status-draft {
+.editorial-item .status-draft {
     height: 10px;
     width: 10px;
     background-color: #ffc107; /* orange for draft */
@@ -234,3 +234,9 @@ a.page-title-action{
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
+
+/* Aumenta a especificidade do seletor para sobrescrever o estilo da CDN */
+html .introjs-tooltipReferenceLayer {
+    z-index: 9999999 !important;
+}
+
