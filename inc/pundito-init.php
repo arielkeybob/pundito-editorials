@@ -49,28 +49,42 @@ add_action('admin_enqueue_scripts', 'pundito_enqueue_custom_admin_js');
 
 
 
-// Enfileirar o intro.js e o script de configuração na tela de edição/criação do 'editorial'
+// Enfileirar o intro.js e o script de configuração na tela de edição/criação do 'editorial' e Industry
 function pundito_enqueue_introjs($hook) {
     global $post_type;
-    if ( ( $hook !== 'post-new.php' && $hook !== 'post.php' ) || $post_type !== 'editorial' ) {
+
+    // Garante que o script seja enfileirado somente nas páginas de edição e criação de posts.
+    if ($hook !== 'post-new.php' && $hook !== 'post.php') {
         return;
     }
 
+    // Enfileira o CSS do Intro.js para qualquer post type que precise.
     wp_enqueue_style('introjs-css', 'https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css');
+
+    // Enfileira o JS do Intro.js para qualquer post type que precise.
     wp_enqueue_script('introjs-js', 'https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js', array('jquery'), null, true);
-    wp_enqueue_script('introjs-setup', plugin_dir_url(__FILE__) . '../js/introjs-setup.js', array('introjs-js'), null, true);
+
+    // Enfileira scripts específicos do tipo de post.
+    if ($post_type === 'editorial') {
+        wp_enqueue_script('editorial-introjs-setup', plugin_dir_url(__FILE__) . '../js/editorial-introjs-setup.js', array('introjs-js'), null, true);
+    } elseif ($post_type === 'industry_post') {
+        wp_enqueue_script('industry-introjs-setup', plugin_dir_url(__FILE__) . '../js/industry-introjs-setup.js', array('introjs-js'), null, true);
+    }
 }
 add_action('admin_enqueue_scripts', 'pundito_enqueue_introjs');
 
-// Modify the redirect URL after saving/publishing to include 'introjs_continue' if necessary
 function pundito_modify_redirect_location($location, $post_id) {
-    if (get_post_type($post_id) === 'editorial' && isset($_POST['introjs_continue']) && $_POST['introjs_continue'] == '1') {
-        // Add the parameter to the redirect URL
-        $location = add_query_arg('introjs_continue', '1', $location);
+    if (isset($_POST['introjs_continue']) && $_POST['introjs_continue'] == '1') {
+        // Adiciona o parâmetro à URL de redirecionamento se necessário.
+        $post_type = get_post_type($post_id);
+        if ($post_type === 'editorial' || $post_type === 'industry_post') {
+            $location = add_query_arg('introjs_continue', '1', $location);
+        }
     }
     return $location;
 }
 add_filter('redirect_post_location', 'pundito_modify_redirect_location', 10, 2);
+
 
 
 function add_editorial_body_class($classes) {

@@ -55,12 +55,12 @@ function pundito_register_industry_taxonomy() {
     $args = array(
         'hierarchical'          => false,
         'labels'                => $labels,
-        'show_ui'               => false,
+        'show_ui'               => true,
         'show_in_nav_menus'     => true,
         'show_admin_column'     => true,
         'query_var'             => true,
         'rewrite'               => array('slug' => 'industry'),
-        'show_in_rest'          => true,
+        'show_in_rest'          => false,
     );
 
     register_taxonomy('industry', ['editorial', 'industry_post'], $args);
@@ -72,3 +72,20 @@ function pundito_register_all_taxonomies() {
     pundito_register_industry_taxonomy();
 }
 add_action('init', 'pundito_register_all_taxonomies');
+
+
+
+//Esconde a a caixa de meta da taxonomia 'Industry' na tela de edição do post
+function pundito_hide_industry_taxonomy_from_edit_screen() {
+    global $pagenow, $typenow;
+
+    // Verifique se você está na tela de edição de post ou adição de novo post
+    if ( $pagenow == 'post.php' || $pagenow == 'post-new.php' ) {
+        // Verifique se o tipo de post é 'editorial' ou 'industry_post'
+        if ( in_array($typenow, array('editorial', 'industry_post')) ) {
+            // Adicione o CSS para esconder a caixa de meta da taxonomia 'Industry'
+            echo '<style>#tagsdiv-industry { display: none; }</style>';
+        }
+    }
+}
+add_action('admin_head', 'pundito_hide_industry_taxonomy_from_edit_screen');
