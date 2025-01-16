@@ -17,5 +17,3 @@ if (!defined('ABSPATH')) {
 require_once plugin_dir_path(__FILE__) . 'inc/pundito-init.php';
 
 
-
-// Apenas um comentário para saber se o update funcionou //
